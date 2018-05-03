@@ -1,0 +1,51 @@
+<script>
+	function compareQuarter(pastDate,currentDate) { // 회계 분기 비교 (과거 날짜, 최근 날짜) : 파라미터 형식 yyyymmdd
+		/*
+		created by tintmin@gmail.com @ 2018.04.25
+		특정한 두 개의 날짜가 속한 분기를 비교하여 동일 분기에 속하면 same, 다른 분기면 different 를 리턴하는 함수.
+		급하게 막 만들었음.
+		*/
+		// 두 날짜를 년/월/일로 모두 분리하고 계산을 위해 숫자형으로 변환
+		var pastY=Number(pastDate.substring(0,4));
+		var pastM=Number(pastDate.substring(4,6));
+		var pastD=Number(pastDate.substring(6,8));
+		var currentY=Number(currentDate.substring(0,4));
+		var currentM=Number(currentDate.substring(4,6));
+		var currentD=Number(currentDate.substring(6,8));
+
+		// 매월 10일 전후로 분리되는 분기의 특성을 반영하기 위해 변수 지정
+		var pastShiftM=pastM;
+		var currentShiftM=currentM;
+		var pastShiftY=pastY;
+		var currentShiftY=currentY;
+
+		// 날짜가 10일 이전이면 전월로 처리
+		if (pastD<=10) pastShiftM=pastM-1;
+		if (currentD<=10) currentShiftM=currentM-1;
+
+		// 현재월이 1월인데, 전월로 넘어갈 경우, 전년 12월로 쉬프트
+		if (pastShiftM<1) {
+			pastShiftM=12;
+			pastShiftY=pastY-1;
+		}
+		if (currentShiftM<1) {
+			currentShiftM=12;
+			currentShiftY=currentY-1;
+		}
+
+		// 입력 받은 두 날짜의 분기를 계산
+		pastQuarter=Math.ceil(pastShiftM/3);
+		currentQuarter=Math.ceil(currentShiftM/3);
+
+		// 두 날짜의 회계 분기가 같으면 same, 다르면 diffenent를 리턴
+		var result=false;
+		if (pastQuarter==currentQuarter && pastShiftY==currentShiftY) result="same";
+		else result="different";
+		return result;
+
+		// 사용 예시 ( 두 날짜를 비교한 결과를 브라우저 개발자 도구 콘솔창에 출력 )
+		// console.log(compareQuarter('20180110','20180311'));
+	}
+
+	console.log(compareQuarter('20180110','20180311'));
+</script>
